@@ -1,0 +1,6 @@
+openai
+ollama
+pydantic
+pydantic-settings
+python-dotenv
+pytest
