@@ -1,5 +1,6 @@
 openai
 ollama
+langgraph
 pydantic
 pydantic-settings
 python-dotenv

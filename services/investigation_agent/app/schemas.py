@@ -1,6 +1,7 @@
 
 from pydantic import BaseModel, Field
-
+from typing import Any
+from typing import Literal
 
 class Hypothesis(BaseModel):
     cause: str = Field(
@@ -20,3 +21,25 @@ class InvestigationPlan(BaseModel):
         min_length=1,
         max_length=5,
     )
+
+class DiagnosticEvidence(BaseModel):
+    device_id: str
+    check_name: str
+    result: dict[str, Any]
+    source: str = "mock_simulator"
+
+
+class HypothesisEvaluation(BaseModel):
+    cause: str
+    status: Literal[
+        "supported",
+        "contradicted",
+        "inconclusive"
+    ]
+    explanation: str
+
+
+class EvidenceEvaluation(BaseModel):
+    evaluations: list[HypothesisEvaluation]
+    investigation_summary: str
+    additional_checks_required: bool    

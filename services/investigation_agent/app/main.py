@@ -1,5 +1,4 @@
-
-from .llm import generate_investigation_plan
+from .graph import build_investigation_graph
 
 
 def main():
@@ -8,13 +7,39 @@ def main():
         "The monitoring system has stopped receiving data."
     )
 
-    print("\nTRACE — AI Investigation Agent")
-    print(f"\nIncident: {incident}")
-    print("\nGenerating investigation hypotheses...\n")
+    graph = build_investigation_graph()
 
-    plan = generate_investigation_plan(incident)
+    initial_state = {
+        "incident_description": incident,
+        "device_id": "DEV-003",
+        "investigation_plan": None,
+        "evidence": [],
+        "evaluation": None,
+    }
 
-    print(plan.model_dump_json(indent=2))
+    result = graph.invoke(initial_state)
+
+    print("\nTRACE — Evidence-Based Investigation")
+
+    # 1. Display investigation plan
+    plan = result["investigation_plan"]
+
+    if plan is not None:
+        print("\nInvestigation Plan:")
+        print(plan.model_dump_json(indent=2))
+
+    # 2. Display collected evidence
+    print("\nCollected Evidence:")
+
+    for item in result["evidence"]:
+        print(item.model_dump_json(indent=2))
+
+    # 3. Display evidence evaluation
+    evaluation = result["evaluation"]
+
+    if evaluation is not None:
+        print("\nEvidence Evaluation:")
+        print(evaluation.model_dump_json(indent=2))
 
 
 if __name__ == "__main__":
